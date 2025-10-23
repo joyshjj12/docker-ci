@@ -33,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          image: ${{ secrets.DOCKERHUB_USERNAME_1 }}/ci-python-lab:latest
+          images: ${{ secrets.DOCKERHUB_USERNAME_1 }}/ci-python-lab
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-,format=short
