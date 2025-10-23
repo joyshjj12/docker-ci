@@ -14,7 +14,7 @@ jobs:
   
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,17 +29,17 @@ jobs:
 
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           image: ${{ secrets.DOCKERHUB_USERNAME }}/ci-python-lab.yml
           tags: |
-            type=raw, value=latest, enable = {{is_default_branch}}
-            type=sha, prefix=sha-,format=short
-            type=ref, event=tag
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=sha-,format=short
+            type=ref,event=tag
 
 
       - name: Setup Qema
-        uses: docker/setup-qema-action@v3
+        uses: docker/setup-qemu-action@v3
 
 
       - name: Docker Buildx
@@ -48,18 +48,18 @@ jobs:
       - name: Docker Login
         uses: docker/login-action@v3
         with: 
-          username:${{ secrets.DOCKERHUB_USERNAME }}
-          password:${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 
       - name: Docker build, push
-        uses: docker/build-test-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: True
           tags: ${{steps.meta.outputs.tags}}
           labels: ${{steps.meta.outputs.labels}}
-          platform: linux/amd64
+          platforms: linux/amd64
 
 
 
